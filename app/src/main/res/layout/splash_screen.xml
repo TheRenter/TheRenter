@@ -5,4 +5,12 @@
     android:layout_height="match_parent"
     tools:context="in.therenter.app.SplashScreen">
 
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:contentDescription="The Renter Logo"
+        android:src="@mipmap/ic_launcher" />
 </RelativeLayout>
