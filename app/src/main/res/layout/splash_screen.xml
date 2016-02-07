@@ -12,5 +12,5 @@
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:contentDescription="The Renter Logo"
-        android:src="@mipmap/ic_launcher" />
+        android:src="@mipmap/land_logo" />
 </RelativeLayout>

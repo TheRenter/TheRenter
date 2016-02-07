@@ -3,4 +3,12 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+
+    <color name="facebookColor">#3b5998</color>
+    <color name="googlePlusColor">#da4c3f</color>
+    <color name="textColor">#9b9b9b</color>
+    <color name="bgColor">#ededed</color>
+    <color name="darkGray">#505050</color>
+
+    <color name="black_semi_transparent">#B2000000</color>
 </resources>
