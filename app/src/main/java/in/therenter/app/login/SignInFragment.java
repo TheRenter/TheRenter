@@ -3,29 +3,63 @@ package in.therenter.app.login;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.facebook.AccessToken;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.FacebookSdk;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+import com.facebook.HttpMethod;
+import com.facebook.login.LoginManager;
+import com.facebook.login.LoginResult;
+import com.firebase.client.AuthData;
+import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.auth.api.signin.GoogleSignInResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.Arrays;
 
 import in.therenter.app.R;
 
 public class SignInFragment extends Fragment {
 
-
     private Context context;
     private Activity activity;
-
     private FragmentManager manager;
     private FragmentTransaction transaction;
+
+    private Firebase firebase;
+
+    private GoogleApiClient gac;
+    private GoogleSignInOptions gso;
+
+    private CallbackManager callbackManager;
+    private JSONObject fbResponse;
+    private final String[] permission = {"public_profile", "email"};
+
+    protected static final int RC_SIGN_IN = 9001;
 
     public SignInFragment() {
         // Required empty public constructor
@@ -44,6 +78,10 @@ public class SignInFragment extends Fragment {
         // Inflate the layout for this fragment
 
         View view = inflater.inflate(R.layout.fragment_sign_in, container, false);
+
+        firebase = new Firebase("https://the-renter-test.firebaseio.com/");
+        FacebookSdk.sdkInitialize(context);
+        callbackManager = CallbackManager.Factory.create();
 
         manager = getFragmentManager();
 
@@ -88,12 +126,130 @@ public class SignInFragment extends Fragment {
             }
         });
 
-        ImageButton btnSignIn = (ImageButton) view.findViewById(R.id.google_plus_login_button);
+        Button google = (Button) view.findViewById(R.id.google_login_button);
+        google.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                signInWithGoogle();
+            }
+        });
 
+        LoginManager.getInstance().registerCallback(callbackManager,
+                new FacebookCallback<LoginResult>() {
+                    @Override
+                    public void onSuccess(LoginResult loginResult) {
+                        System.out.println("Facebook Login Successful!");
+                        System.out.println("Logged in user Details : ");
+                        System.out.println("--------------------------");
+                        System.out.println("User ID  : " + loginResult.getAccessToken().getUserId());
+                        System.out.println("Authentication Token : " + loginResult.getAccessToken().getToken());
 
-        ImageButton loginButton = (ImageButton) view.findViewById(R.id.facebook_login_button);
+                        AccessToken token = loginResult.getAccessToken();
+
+                        firebase.authWithOAuthToken("facebook", token.toString(), new Firebase.AuthResultHandler() {
+                            @Override
+                            public void onAuthenticated(AuthData authData) {
+                                Toast.makeText(context, "Facebook user auth with firebase", Toast.LENGTH_SHORT).show();
+                            }
+
+                            @Override
+                            public void onAuthenticationError(FirebaseError firebaseError) {
+                                Toast.makeText(context, "Facebook user not auth with firebase", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+
+                        Toast.makeText(activity, "Login Successful!", Toast.LENGTH_LONG).show();
+
+                        GraphRequest request = new GraphRequest(token, "/me", null, HttpMethod.GET, new GraphRequest.Callback() {
+                            @Override
+                            public void onCompleted(GraphResponse graphResponse) {
+                                System.out.println("Facebook response " + graphResponse);
+                                fbResponse = graphResponse.getJSONObject();
+
+                                try {
+                                    Toast.makeText(context, fbResponse.getString("name") + "\n" + fbResponse.getString("email"), Toast.LENGTH_SHORT).show();
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        });
+                        request.executeAsync();
+                    }
+
+                    @Override
+                    public void onCancel() {
+                        Toast.makeText(activity, "Login cancelled by user!", Toast.LENGTH_LONG).show();
+                        System.out.println("Facebook Login failed!!");
+                    }
+
+                    @Override
+                    public void onError(FacebookException e) {
+                        Toast.makeText(activity, "Login unsuccessful!", Toast.LENGTH_LONG).show();
+                        System.out.println("Facebook Login failed!!");
+                    }
+                });
+
+        Button facebook = (Button) view.findViewById(R.id.facebook_login_button);
+        facebook.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LoginManager.getInstance().logInWithReadPermissions(activity, Arrays.asList(permission));
+            }
+        });
 
         return view;
+    }
+
+    private void signInWithGoogle() {
+        if (gac != null) {
+            gac.disconnect();
+        }
+
+        gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .requestIdToken(getString(R.string.server_client_id))
+                .build();
+        gac = new GoogleApiClient.Builder(context)
+                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
+                .build();
+
+        final Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(gac);
+        startActivityForResult(signInIntent, RC_SIGN_IN);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == RC_SIGN_IN) {
+            GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
+
+            if (result.isSuccess()) {
+
+                GoogleSignInAccount acct = result.getSignInAccount();
+
+                String idToken = acct.getIdToken();
+//                Toast.makeText(context, idToken, Toast.LENGTH_SHORT).show();
+                firebase.authWithOAuthToken("google", idToken, new Firebase.AuthResultHandler() {
+                    @Override
+                    public void onAuthenticated(AuthData authData) {
+                        Toast.makeText(context, "Google user auth with firebase", Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onAuthenticationError(FirebaseError firebaseError) {
+                        Toast.makeText(context, "Google user not auth with firebase", Toast.LENGTH_SHORT).show();
+                        Log.e("Firebase error message", firebaseError.getMessage());
+                        Log.e("Firebase error details", firebaseError.getDetails());
+                    }
+                });
+
+            } else {
+                Toast.makeText(context, "Some error occurred in google auth", Toast.LENGTH_SHORT).show();
+            }
+        } else if (requestCode == 64206) { //facebook
+            callbackManager.onActivityResult(requestCode, resultCode, data);
+        }
     }
 
 }

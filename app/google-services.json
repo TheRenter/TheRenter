@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_id": "heroic-dynamo-121416",
+    "project_number": "924828502822",
+    "name": "The Renter"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:924828502822:android:a12f9099a45fa14c",
+        "client_id": "android:in.therenter.app",
+        "client_type": 1,
+        "android_client_info": {
+          "package_name": "in.therenter.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "924828502822-0i7utffl6g0o5o4tbaubc0stfo01nid8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "in.therenter.app",
+            "certificate_hash": "9EA75F9E0BF7C68295B04059D49488A4F419B2EA"
+          }
+        },
+        {
+          "client_id": "924828502822-01b42cvbua0j6mvdtv7cpaef19168bod.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "cloud_messaging_service": {
+          "status": 1,
+          "apns_config": []
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "google_signin_service": {
+          "status": 2
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "client_info": [],
+  "ARTIFACT_VERSION": "1"
+}

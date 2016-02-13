@@ -5,10 +5,13 @@
     <color name="colorAccent">#FF4081</color>
 
     <color name="facebookColor">#3b5998</color>
-    <color name="googlePlusColor">#da4c3f</color>
+    <color name="googleColor">#ffffff</color>
+    <color name="googleTextColor">#636363</color>
     <color name="textColor">#9b9b9b</color>
     <color name="bgColor">#ededed</color>
     <color name="darkGray">#505050</color>
 
     <color name="black_semi_transparent">#B2000000</color>
+
+    <color name="white">#ffffff</color>
 </resources>

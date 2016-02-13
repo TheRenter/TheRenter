@@ -112,30 +112,42 @@
             android:orientation="horizontal"
             android:weightSum="1">
 
-            <ImageButton
+            <Button
                 android:id="@+id/facebook_login_button"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginEnd="10dp"
-                android:layout_marginRight="10dp"
+                android:layout_marginEnd="5dp"
+                android:layout_marginRight="5dp"
                 android:layout_weight=".5"
                 android:background="@drawable/custom_button_facebook"
                 android:contentDescription="Facebook Login Button"
-                android:src="@mipmap/btn_fb_normal" />
+                android:drawableLeft="@mipmap/btn_fb_normal"
+                android:drawableStart="@mipmap/btn_fb_normal"
+                android:gravity="center"
+                android:paddingEnd="10dp"
+                android:paddingRight="10dp"
+                android:text="Sign in"
+                android:textAllCaps="false"
+                android:textColor="#ffffff" />
 
-            <ImageButton
-                android:id="@+id/google_plus_login_button"
+            <Button
+                android:id="@+id/google_login_button"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="10dp"
-                android:layout_marginStart="10dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginStart="5dp"
                 android:layout_weight=".5"
                 android:background="@drawable/custom_button_google_plus"
                 android:contentDescription="Google Plus Login Button"
-                android:src="@mipmap/btn_g_normal" />
+                android:drawableLeft="@mipmap/btn_new_g_normal"
+                android:drawableStart="@mipmap/btn_new_g_normal"
+                android:paddingEnd="10dp"
+                android:paddingRight="10dp"
+                android:text="Sign in"
+                android:textAllCaps="false"
+                android:textColor="@color/googleTextColor" />
 
         </LinearLayout>
-
 
         <TextView
             android:id="@+id/textViewRegisterSignIn"
@@ -148,6 +160,5 @@
             android:textAppearance="?android:attr/textAppearanceSmall" />
 
     </RelativeLayout>
-
 
 </ScrollView>
