@@ -11,6 +11,8 @@ import android.util.Base64;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+import in.therenter.app.main.MainActivity;
+
 public class SplashScreen extends AppCompatActivity {
 
     @Override

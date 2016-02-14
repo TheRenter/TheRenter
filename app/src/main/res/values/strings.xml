@@ -3,5 +3,11 @@
 
     <string name="server_client_id">924828502822-01b42cvbua0j6mvdtv7cpaef19168bod.apps.googleusercontent.com</string>
     <string name="facebook_app_id">435276693330496</string>
+    <string name="title_activity_main">MainActivity</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
 
 </resources>
