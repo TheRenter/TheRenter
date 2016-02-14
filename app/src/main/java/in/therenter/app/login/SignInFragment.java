@@ -159,21 +159,6 @@ public class SignInFragment extends Fragment {
                         });
 
                         Toast.makeText(activity, "Login Successful!", Toast.LENGTH_LONG).show();
-
-                        GraphRequest request = new GraphRequest(token, "/me", null, HttpMethod.GET, new GraphRequest.Callback() {
-                            @Override
-                            public void onCompleted(GraphResponse graphResponse) {
-                                System.out.println("Facebook response " + graphResponse);
-                                fbResponse = graphResponse.getJSONObject();
-
-                                try {
-                                    Toast.makeText(context, fbResponse.getString("name") + "\n" + fbResponse.getString("email"), Toast.LENGTH_SHORT).show();
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        });
-                        request.executeAsync();
                     }
 
                     @Override
@@ -186,6 +171,7 @@ public class SignInFragment extends Fragment {
                     public void onError(FacebookException e) {
                         Toast.makeText(activity, "Login unsuccessful!", Toast.LENGTH_LONG).show();
                         System.out.println("Facebook Login failed!!");
+                        Log.e("facebook login error", e.getMessage());
                     }
                 });
 

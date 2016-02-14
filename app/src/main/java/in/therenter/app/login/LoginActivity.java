@@ -30,8 +30,8 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-        if (resultCode == SignInFragment.RC_SIGN_IN || resultCode == 64206) {
-            SignInFragment fragment = (SignInFragment) getSupportFragmentManager().findFragmentByTag("SignInFragment");
+        if (requestCode == SignInFragment.RC_SIGN_IN || requestCode == 64206) {
+            SignInFragment fragment = (SignInFragment) getSupportFragmentManager().findFragmentById(R.id.relativeLayoutLogin);
             fragment.onActivityResult(requestCode, resultCode, data);
         } else
             super.onActivityResult(requestCode, resultCode, data);
